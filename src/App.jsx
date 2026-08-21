@@ -6,6 +6,7 @@ import ImageList from "./components/ImageList";
 import DataList from "./components/DataList";
 import Login from "./components/Login";
 import { UserAuth } from "./context/AuthContext";
+import TvList from "./components/TvList";
 
 function RequireAuth({ isAuthenticated, children }) {
   if (!isAuthenticated) {
@@ -15,6 +16,8 @@ function RequireAuth({ isAuthenticated, children }) {
 }
 
 function Layout({ children, user, activeTab, onSignOut, onTabChange }) {
+  console.log(activeTab);
+  
   return (
     <div className="bg-[#f5f3ff] max-w-[1024px] mx-auto relative overflow-hidden font-['DM_Sans']">
       <Header user={user} onSignOut={onSignOut} />
@@ -40,6 +43,8 @@ export default function App() {
       setActiveTab("image");
     } else if (location.pathname.startsWith("/datalist")) {
       setActiveTab("data");
+    }else if (location.pathname.startsWith("/tv-list")) {
+      setActiveTab("tv-list");
     }
   }, [location.pathname]);
 
@@ -62,6 +67,8 @@ export default function App() {
       navigate("/imagelist");
     } else if (tabId === "data") {
       navigate("/datalist");
+    } else if (tabId === "tv-list") {
+      navigate("/tv-list");
     }
   };
 
@@ -73,7 +80,7 @@ export default function App() {
           isLoggedIn ? (
             <Navigate to="/imagelist" replace />
           ) : (
-            <Login  />
+            <Login />
           )
         }
       />
@@ -108,6 +115,23 @@ export default function App() {
             >
               <div className="data_wrapper">
                 <DataList />
+              </div>
+            </Layout>
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/tv-list"
+        element={
+          <RequireAuth isAuthenticated={isLoggedIn}>
+            <Layout
+              user={user}
+              activeTab={activeTab}
+              onSignOut={handleSignOut}
+              onTabChange={handleTabChange}
+            >
+              <div className="data_wrapper">
+                <TvList />
               </div>
             </Layout>
           </RequireAuth>
