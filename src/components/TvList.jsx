@@ -149,7 +149,7 @@ export default function TvList() {
     return (
         <div className="flex flex-col gap-3 p-5">
             {/* TV selector: 4 horizontal + 4 vertical */}
-            <div className="flex flex-col gap-3 mb-1 sm:flex-row">
+            <div className="flex flex-col gap-3 mb-1 sm:flex-row sticky top-0 z-20 bg-[#f9f6ff] pt-2 pb-3 -mx-5 px-5">
                 <div className="flex-1">
                     <span className="block text-[10px] font-semibold tracking-[0.8px] uppercase text-[#a693c8] mb-1.5 px-0.5">
                         Horizontal/Vertical TVs
