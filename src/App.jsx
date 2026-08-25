@@ -16,8 +16,7 @@ function RequireAuth({ isAuthenticated, children }) {
 }
 
 function Layout({ children, user, activeTab, onSignOut, onTabChange }) {
-  console.log(activeTab);
-  
+
   return (
     <div className="bg-[#f5f3ff] max-w-[1024px] mx-auto relative overflow-hidden font-['DM_Sans']">
       <Header user={user} onSignOut={onSignOut} />
@@ -43,7 +42,7 @@ export default function App() {
       setActiveTab("image");
     } else if (location.pathname.startsWith("/datalist")) {
       setActiveTab("data");
-    }else if (location.pathname.startsWith("/tv-list")) {
+    } else if (location.pathname.startsWith("/tv-list")) {
       setActiveTab("tv-list");
     }
   }, [location.pathname]);
