@@ -186,6 +186,7 @@ export default function TvList() {
         setAssigning(true);
         const screenType = selectedTV == "H1" || selectedTV == "H2" || selectedTV == "H3" || selectedTV == "H4" ? "Horizontal" : "Vertical"
         const screenNumber = selectedTV == "H1" || selectedTV == "V1" ? 1 : selectedTV == "H2" || selectedTV == "V2" ? 2 : selectedTV == "H3" || selectedTV == "V3" ? 3 : selectedTV == "H4" || selectedTV == "V4" ? 4 : 1
+        const linkData = screenType == "Horizontal" ? 'sh' : "sv";
 
 
         if (dataLoad != null) {
@@ -193,6 +194,8 @@ export default function TvList() {
                 screenMappingId: screenNumber,
                 screenNumber: screenNumber,
                 updatedBy: userDetails?.CustomerId,
+                "CompanyUniqueId": userDetails?.CompanyUniqueId,
+                "ScreenType": screenType,
             }
             try {
                 await axios.post(`${BaseURL}DesignBoard/DeleteScreenMappingAll`, deletePayload, {
@@ -227,6 +230,16 @@ export default function TvList() {
             setSelectedProduct(null);
             showToast("Failed to assign, please try again");
         } finally {
+            const ReloadPayload = {
+                "companyId": item?.CompanyUniqueId,
+                "publishBoardUniqueId": screenNumber,
+                "Link": `${item?.CompanyUniqueId}${linkData}${screenNumber}`
+            };
+
+            await axios.post(`${BaseURL}DesignBoard/CallPublish`, ReloadPayload, {
+                headers: { "Content-Type": "application/json" },
+            });
+
             setAssigning(false);
             getTvBoard();
         }
