@@ -7,6 +7,7 @@ import DataList from "./components/DataList";
 import Login from "./components/Login";
 import { UserAuth } from "./context/AuthContext";
 import TvList from "./components/TvList";
+import UserLink from "./components/UserLink";
 
 function RequireAuth({ isAuthenticated, children }) {
   if (!isAuthenticated) {
@@ -36,7 +37,10 @@ export default function App() {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { isLoggedIn, isLoading } = UserAuth();
+  const { isLoggedIn, isLoading, userDetails } = UserAuth();
+  const isAniboardAdmin =
+    (userDetails?.Email || userDetails?.email || "")?.toLowerCase() === "info@aniboard.com";
+
   useEffect(() => {
     if (location.pathname.startsWith("/imagelist")) {
       setActiveTab("image");
@@ -44,6 +48,8 @@ export default function App() {
       setActiveTab("data");
     } else if (location.pathname.startsWith("/tv-list")) {
       setActiveTab("tv-list");
+    } else if (location.pathname.startsWith("/userlink") || location.pathname.startsWith("/links")) {
+      setActiveTab("links");
     }
   }, [location.pathname]);
 
@@ -68,6 +74,8 @@ export default function App() {
       navigate("/datalist");
     } else if (tabId === "tv-list") {
       navigate("/tv-list");
+    } else if (tabId === "links" || tabId === "userlink") {
+      navigate("/userlink");
     }
   };
 
@@ -135,6 +143,33 @@ export default function App() {
             </Layout>
           </RequireAuth>
         }
+      />
+
+      <Route
+        path="/userlink"
+        element={
+          <RequireAuth isAuthenticated={isLoggedIn}>
+            {isAniboardAdmin ? (
+              <Layout
+                user={user}
+                activeTab={activeTab}
+                onSignOut={handleSignOut}
+                onTabChange={handleTabChange}
+              >
+                <div className="userlink_wrapper">
+                  <UserLink />
+                </div>
+              </Layout>
+            ) : (
+              <Navigate to="/imagelist" replace />
+            )}
+          </RequireAuth>
+        }
+      />
+
+      <Route
+        path="/links"
+        element={<Navigate to="/userlink" replace />}
       />
 
       <Route
